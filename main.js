@@ -13,9 +13,12 @@ class Field {
 
   // print out a string representation of the board
   print() {
+    let result = "";
     for (let i = 0; i < this.field2D.length; i++) {
-      console.log(this.field2D[i]);
+      result += this.field2D[i].join(" ");
+      result += "\n";
     }
+    console.log(result);
   }
 }
 
