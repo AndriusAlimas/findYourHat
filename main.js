@@ -4,7 +4,9 @@ const hat = "^";
 const hole = "O";
 const fieldCharacter = "░";
 const pathCharacter = "*";
-
+let validInput = 1;
+let rowIndex = 0;
+let columnIndex = 0;
 class Field {
   // constructor
   constructor(field2D) {
@@ -21,40 +23,65 @@ class Field {
     console.log(result);
   }
 
+  validateInput(row, col) {
+    if (
+      typeof this.field2D[row] !== "undefined" &&
+      typeof this.field2D[row][col] !== "undefined"
+    ) {
+      if (this.field2D[row][col] === hat) {
+        console.log("YOU FOUND THE HAT!!!");
+      } else if (this.field2D[row][col] === hole) {
+        console.log("You feel into a hole!");
+      } else if (
+        this.field2D[row][col] === fieldCharacter ||
+        this.field2D[row][col] === pathCharacter
+      ) {
+        this.field2D[row][col] = pathCharacter;
+        return 1;
+      }
+    } else {
+      console.log("U went out of bounds");
+    }
+  }
+
   // this method update map when you move
   updateFieldArray(row, col) {
-    try {
-      this.field2D[row][col] = "*"; // this will be rendered your position (player)
-    } catch (e) {
-      // other exception catch like array out of bound exception
-      console.log("sorry, u can't move to this place its wall!");
-    }
+    validInput = this.validateInput(row, col);
   }
 }
 
 function playGame() {
-  // user starting position
-  let rowIndex = 0;
-  let columnIndex = 0;
-
-  // print current field
   const myField = new Field([
     ["*", "░", "O"],
     ["░", "O", "░"],
     ["░", "^", "░"],
+    ["░", "O", "░"],
+    ["░", "O", "░"],
   ]);
-  myField.print();
-  // get user input
-  let userInput = prompt("Which direction? : ");
 
-  // add or subtract columnIndex if user input is l(left) or r(right)
-  columnIndex = userInput === "r" ? columnIndex++ : columnIndex--;
-  // add or subtract rowIndex if user input is u(up) or d(down)
-  rowIndex = userInput === "d" ? rowIndex++ : rowIndex--;
-
-  // update field array
-
-  // print out current field array
+  while (validInput === 1) {
+    // print current field
+    myField.print();
+    // get user input
+    let userInput = prompt("Which direction? : ");
+    // process user input
+    switch (userInput) {
+      case "l":
+        columnIndex--;
+        break;
+      case "r":
+        columnIndex++;
+        break;
+      case "u":
+        rowIndex--;
+        break;
+      case "d":
+        rowIndex++;
+        break;
+    }
+    // update field array
+    myField.updateFieldArray(rowIndex, columnIndex);
+  } // end of loop
 }
 
 playGame();
